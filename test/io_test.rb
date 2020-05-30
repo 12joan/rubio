@@ -37,4 +37,12 @@ class IOTest < Minitest::Test
       io2.perform!
     }
   end
+
+  test "fmap :: (a -> b) -> IO a -> IO b" do
+    io1 = Rubio::IO.new { "Hello" }
+    reverse = ->(x) { x.reverse }
+    io2 = io1.fmap(reverse)
+
+    assert_equal "olleH", io2.perform!
+  end
 end

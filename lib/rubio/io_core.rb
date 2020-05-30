@@ -13,10 +13,6 @@ module Rubio
 
       getln = expose :getln, IO.new { gets }
 
-      fmap = expose :fmap, ->(f, x) {
-        x.fmap(f)
-      }.curry
-
       openFile = expose :openFile, ->(path, mode) {
         IO.new { open(path, mode) }
       }.curry

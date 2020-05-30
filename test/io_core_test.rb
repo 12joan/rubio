@@ -9,14 +9,6 @@ class IOCoreTest < Minitest::Test
     assert_equal 42, io.perform!
   end
 
-  test "fmap :: (a -> b) -> IO a -> IO b" do
-    reverse = ->(x) { x.reverse }
-    io1 = pureIO["Hello"]
-    io2 = fmap[reverse][io1]
-
-    assert_equal "olleH", io2.perform!
-  end
-
   test "openFile :: FilePath -> IOMode -> IO Handle" do
     io_handle = openFile["test/test_data/file1"]["r"]
 

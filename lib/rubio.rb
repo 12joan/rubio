@@ -4,6 +4,7 @@ require "rubio/functor_core"
 require "rubio/io"
 require "rubio/io_core"
 require "rubio/maybe"
+require "rubio/maybe_core"
 
 module Rubio
   class Error < StandardError; end

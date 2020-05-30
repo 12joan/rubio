@@ -3,7 +3,7 @@ module Rubio
     module Core
       extend Expose
 
-      pure = expose :pure, ->(x) {
+      pureIO = expose :pureIO, ->(x) {
         IO.pure(x)
       }
 

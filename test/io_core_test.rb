@@ -4,14 +4,14 @@ class IOCoreTest < Minitest::Test
   include Rubio::IO::Core
 
   test "pure :: a -> IO a" do
-    io = pure[42]
+    io = pureIO[42]
 
     assert_equal 42, io.perform!
   end
 
   test "fmap :: (a -> b) -> IO a -> IO b" do
     reverse = ->(x) { x.reverse }
-    io1 = pure["Hello"]
+    io1 = pureIO["Hello"]
     io2 = fmap[reverse][io1]
 
     assert_equal "olleH", io2.perform!

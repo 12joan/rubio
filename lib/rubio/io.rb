@@ -21,8 +21,16 @@ module Rubio
       }
     end
 
+    def fmap(f) 
+      self >> (IO.method(:pure) << f)
+    end
+
     def perform!
       @action.call
+    end
+
+    def self.pure(x)
+      IO.new { x }
     end
   end
 end

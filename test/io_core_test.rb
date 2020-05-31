@@ -18,11 +18,23 @@ class IOCoreTest < Minitest::Test
     handle.close
   end
 
-  test "hClose :: Handle -> IO" do
+  test "hClose :: Handle -> IO ()" do
     handle = open("test/test_data/file1", "r")
 
     hClose[handle].perform!
 
     assert_predicate handle, :closed?
+  end
+
+  test "readFile :: Handle -> IO String" do
+    handle = open("test/test_data/file1", "r")
+
+    assert_match( /Hello world!/, readFile[handle].perform! )
+  end
+
+  test "withFile :: FilePath -> IOMode -> (Handle -> IO a) -> IO a" do
+    io = withFile["test/test_data/file1"]["r"][readFile]
+
+    assert_match( /Hello world!/, io.perform! )
   end
 end

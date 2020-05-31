@@ -42,4 +42,14 @@ class MaybeTest < Minitest::Test
 
     assert_instance_of Rubio::Maybe::NothingClass, maybe2
   end
+
+  test "inspecting (Just x) yields a meaningful value" do
+    maybe = Rubio::Maybe::JustClass.new(5)
+    assert_equal "Just 5", maybe.inspect
+  end
+
+  test "inspecting Nothing yields a meaningful value" do
+    maybe = Rubio::Maybe::NothingClass.new
+    assert_equal "Nothing", maybe.inspect
+  end
 end

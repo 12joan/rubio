@@ -16,6 +16,10 @@ module Rubio
       def get!
         @value
       end
+
+      def inspect
+        "Just #{@value.inspect}"
+      end
     end
 
     class NothingClass
@@ -29,6 +33,10 @@ module Rubio
 
       def get!
         nil
+      end
+
+      def inspect
+        "Nothing"
       end
     end
   end

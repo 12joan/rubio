@@ -45,4 +45,9 @@ class IOTest < Minitest::Test
 
     assert_equal "olleH", io2.perform!
   end
+
+  test "inspecting IO yields a meaningful value" do
+    io = Rubio::IO.new { 5 }
+    assert_equal "IO", io.inspect
+  end
 end

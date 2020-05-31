@@ -32,5 +32,9 @@ module Rubio
     def self.pure(x)
       IO.new { x }
     end
+
+    def inspect
+      "IO"
+    end
   end
 end

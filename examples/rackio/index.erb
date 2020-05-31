@@ -1,0 +1,17 @@
+<h1>Rubio on Rackio</h1>
+
+<h2>State</h2>
+
+<ul>
+  <% state.each do |k, v| %>
+    <li><strong><%== k %></strong>: <%== v %></li>
+  <% end %>
+</ul>
+
+<h2>Environment</h2>
+
+<ul>
+  <% env.each do |k, v| %>
+    <li><strong><%== k %></strong>: <%== v %></li>
+  <% end %>
+</ul>

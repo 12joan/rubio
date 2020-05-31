@@ -6,19 +6,19 @@ class StateTest < Minitest::Test
       ["Hello, #{x}!", x]
     }
 
-    state = Rubio::State.new(f)
+    state = Rubio::State::StateClass.new(f)
 
     assert_equal f, state.run
   end
 
   # Used below
   push = ->(x) {
-    Rubio::State.new(
+    Rubio::State::StateClass.new(
       ->(xs) { [nil, [x] + xs] }
     )
   }
 
-  pop = Rubio::State.new(
+  pop = Rubio::State::StateClass.new(
     ->(xs) { [ xs.first, xs.drop(1) ] }
   )
 

@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Joe Anderson"]
   spec.email         = ["joe@mousetrapped.co.uk"]
 
-  spec.summary       = %q{The IO monad for Ruby}
+  spec.summary       = %q{Write pure, functional code that encapsulates side effects using the IO monad (and friends) in Ruby}
   spec.homepage      = "https://github.com/12joan/rubio"
   spec.license       = "Unlicense"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")

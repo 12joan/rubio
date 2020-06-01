@@ -1,5 +1,7 @@
 # Rubio
 
+[![Build Status](https://travis-ci.com/12joan/rubio.svg?branch=master)](https://travis-ci.com/12joan/rubio)
+
 Write pure, functional code that encapsulates side effects using the IO monad (and friends) in Ruby.
 
 ## Contents
@@ -708,4 +710,3 @@ doSomethingWithMaybe[ Nothing ] #=> "You got nothing."
 - [examples/repl.rb](examples/repl.rb) and [examples/whileM.rb](examples/whileM.rb) - Custom includable modules, looping, more nuanced use of IO
 - [examples/ruby_2.7_pattern_matching.rb](examples/ruby_2.7_pattern_matching.rb) - Using Maybe with the experimental pattern matching syntax in Ruby 2.7
 - [examples/rackio/](examples/rackio/) - A small Rack application built using Rubio; uses the State monad to store data in memory that persists between requests
-

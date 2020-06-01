@@ -1,6 +1,6 @@
 # Rubio
 
-[![Build Status](https://travis-ci.com/12joan/rubio.svg?branch=master)](https://travis-ci.com/12joan/rubio)
+[![Build Status](https://travis-ci.com/12joan/rubio.svg?branch=master)](https://travis-ci.com/12joan/rubio) [![Maintainability](https://api.codeclimate.com/v1/badges/e435a25bf4b6197b464e/maintainability)](https://codeclimate.com/github/12joan/rubio/maintainability)
 
 Write pure, functional code that encapsulates side effects using the IO monad (and friends) in Ruby.
 

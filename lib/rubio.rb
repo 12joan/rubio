@@ -1,4 +1,5 @@
 require "rubio/version"
+require "rubio/function_composition"
 require "rubio/expose"
 require "rubio/functor_core"
 require "rubio/unit"

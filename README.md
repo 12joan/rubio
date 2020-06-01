@@ -4,8 +4,31 @@ Write pure, functional code that encapsulates side effects using the IO monad (a
 
 ## Contents
 
-[TOC]
-
+- [1. Installation](#1-installation)
+- [2. Usage and syntax](#2-usage-and-syntax)
+  - [2.1 `main :: IO`](#21-main--io)
+  - [2.2 `>>` operator for monads](#22--operator-for-monads)
+  - [2.3 Function composition](#23-function-composition)
+  - [2.4 Partially applying functions in Ruby](#24-partially-applying-functions-in-ruby)
+  - [2.5 `%` operator](#25--operator)
+  - [2.6 Expose/extend pattern](#26-exposeextend-pattern)
+- [3. Built-in modules](#3-built-in-modules)
+  - [3.1 `Rubio::IO::Core`](#31-rubioiocore)
+    - [3.1.1 Limitations](#311-limitations)
+    - [3.1.2 Built-in functions](#312-built-in-functions)
+  - [3.2 `Rubio::Maybe::Core`](#32-rubiomaybecore)
+    - [3.2.1 Unwraping `Maybe a -> a`](#321-unwraping-maybe-a---a)
+      - [3.2.1.1 Ruby < 2.7](#3211-ruby--27)
+      - [3.2.1.1 Ruby >= 2.7](#3212-ruby--27)
+    - [3.2.2 Built-in functions](#322-built-in-functions)
+  - [3.3 `Rubio::State::Core`](#33-rubiostatecore)
+    - [3.3.1 Built-in functions](#331-built-in-functions)
+  - [3.4 `Rubio::Unit::Core`](#34-rubiounitcore)
+    - [3.4.1 Built-in functions](#341-built-in-functions)
+  - [3.5 `Rubio::Functor::Core`](#35-rubiofunctorcore)
+    - [3.5.1 Built-in functions](#351-built-in-functions)
+  - [3.6 `Rubio::Expose`](#36-rubioexpose)
+- [4. Examples](#4-examples)
 
 ## 1. Installation
 

@@ -2,11 +2,16 @@
 
 Write pure, functional code that encapsulates side effects using the IO monad (and friends) in Ruby.
 
-## 1 Installation
+## Contents
+
+[TOC]
+
+
+## 1. Installation
 
 To do
 
-## 2 Usage and syntax
+## 2. Usage and syntax
 
 ### 2.1 `main :: IO`
 
@@ -23,7 +28,7 @@ agree = ->(favourite) {
 }
 
 # main :: IO
-main = println["What's your favourite monad?"] >> getln >> (println < agree)
+main = println["What's your favourite monad?"] >> getln >> (println << agree)
 main.perform!
 ```
 
@@ -51,36 +56,17 @@ Note that whereas `getln` is a value of type `IO`, `println` is a function of ty
 
 ### 2.3 Function composition
 
-Rubio monkey patches the `>` and `<` operators onto `Proc` and `Method`. These operators serve as alternatives to the regular function composition operators (`>>` and `<<`) with enhanced support for curried functions. 
+Ruby Procs can be composed using the built-in `>>` and `<<` operators. 
 
 ```ruby
 add10 = ->(x) { x + 10 }
 double = ->(x) { x * 2 }
 
-add10_and_double = double < add10
-double_and_add10 = double > add10
+add10_and_double = double << add10
+double_and_add10 = double >> add10
 
 add10_and_double[5] #=> 30
 double_and_add10[5] #=> 20
-```
-
-```ruby
-include Rubio::Maybe::Core
-include Rubio::Functor::Core
-
-divide = ->(x, y) {
-  case y
-  when 0
-    Nothing
-  else
-    Just[x / y]
-  end
-}.curry
-
-double = ->(x) { x * 2 }
-
-divide_and_double = fmap[double] << divide
-divide_and_double[120, 10]
 ```
 
 ### 2.4 Partially applying functions in Ruby
@@ -102,7 +88,16 @@ add10[5] #=> 15
 
 ### 2.5 `%` operator
 
+Rubio monkey patches the `%` operator, which is an alias for `fmap`, onto `Proc` and `Method`. 
 
+```ruby
+include Rubio::Maybe::Core
+
+reverse = proc(&:reverse)
+
+reverse % Just["Hello"] #=> Just "olleH"
+reverse % Nothing #=> Nothing
+```
 
 ### 2.6 Expose/extend pattern
 
@@ -146,7 +141,7 @@ module SomewhereElse
 end
 ```
 
-## 3 Built-in modules
+## 3. Built-in modules
 
 ### 3.1 `Rubio::IO::Core`
 
@@ -401,8 +396,8 @@ doSomethingWithMaybe[ Nothing ] #=> "You got nothing."
   
   double = ->(x) { x * 2 }
   
-  divide[12, 2] >> (Just < double) #=> Just 12
-  divide[12, 0] >> (Just < double) #=> Nothing
+  double % divide[12, 2] #=> Just 12
+  double % divide[12, 0] #=> Nothing
   ```
 
 - `pureMaybe :: a -> Maybe a`
@@ -649,6 +644,44 @@ doSomethingWithMaybe[ Nothing ] #=> "You got nothing."
   fmap[reverse][obj] #=> #<struct CustomType value="olleH">
   ```
   
+  Note that the infix `%` operator can also be used without including `Rubio::Functor::Core`. 
   
+  ```ruby
+  include Rubio::Maybe::Core
   
+  reverse = proc(&:reverse)
   
+  reverse % Just["Hello"] #=> Just "olleH"
+  reverse % Nothing #=> Nothing
+  ```
+  
+### 3.6 `Rubio::Expose`
+
+#### 3.6.1 Methods
+
+- `expose(method_name, value) -> value`
+
+  Defines a getter method for the given value.
+
+  ```ruby
+  module StdMath
+    extend Rubio::Expose
+    
+    add = ->(x, y) { x + y }.curry
+    instance_methods.include?(:add) #=> false
+    
+    expose :add, add
+    instance_methods.include?(:add) #=> true
+  end
+  
+  include StdMath
+  
+  add[3, 4] #=> 7
+  ```
+
+## 4. Examples
+
+- [examples/fizz_buzz.rb](#) - Examples of basic functional programming, basic IO, Maybe, fmap
+- [examples/repl.rb](#) and [examples/whileM.rb](#) - Custom includable modules, looping, more nuanced use of IO
+- [examples/ruby_2.7_pattern_matching.rb](#) - Using Maybe with the experimental pattern matching syntax in Ruby 2.7
+- [examples/rackio/](#) - A small Rack application built using Rubio; uses the State monad to store data in memory that persists between requests

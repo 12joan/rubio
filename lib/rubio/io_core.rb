@@ -3,29 +3,29 @@ module Rubio
     module Core
       extend Expose
 
-      pureIO = expose :pureIO, ->(x) {
+      pureIO = ->(x) {
         IO.pure(x)
       }
 
-      println = expose :println, ->(x) {
+      println = ->(x) {
         IO.new { puts x }
       }
 
-      getln = expose :getln, IO.new { gets }
+      getln = IO.new { gets }
 
-      openFile = expose :openFile, ->(path, mode) {
+      openFile = ->(path, mode) {
         IO.new { open(path, mode) }
       }.curry
 
-      hClose = expose :hClose, ->(handle) {
+      hClose = ->(handle) {
         IO.new { handle.close }
       }
 
-      readFile = expose :readFile, ->(handle) {
+      readFile = ->(handle) {
         Rubio::IO.new { handle.read }
       }
 
-      bracket = expose :bracket, ->(acquire, release, process) {
+      bracket = ->(acquire, release, process) {
         acquire >> ->(resource) {
           process[resource] >> ->(result) {
             release[resource] >> pureIO[result]
@@ -33,9 +33,18 @@ module Rubio
         }
       }.curry
 
-      withFile = expose :withFile, ->(path, mode) {
+      withFile = ->(path, mode) {
         bracket[ openFile[path, mode] ][hClose]
       }.curry
+
+      expose :pureIO, pureIO
+      expose :println, println
+      expose :getln, getln
+      expose :openFile, openFile
+      expose :hClose, hClose
+      expose :readFile, readFile
+      expose :bracket, bracket
+      expose :withFile, withFile
     end
   end
 end

@@ -5,11 +5,13 @@ module Rackio
     extend Rubio::Expose
     extend Rubio::IO::Core
 
-    render = expose :render, ->(template_path, locals) {
+    render = ->(template_path, locals) {
       withFile[template_path]["r"][readFile] >> ->(template) {
         pureIO[ Erubis::Eruby.new(template).result(locals) ]
       }
     }.curry
+
+    expose :render, render
   end
 
   class GlueLayer

@@ -3,7 +3,9 @@ module Rubio
     module Core
       extend Rubio::Expose
 
-      unit = expose :unit, UnitClass.new
+      unit = UnitClass.new
+
+      expose :unit, unit
     end
   end
 end

@@ -6,8 +6,6 @@ module Application
   extend Rubio::Functor::Core
   extend Rackio::Core
 
-  initialState = expose :initialState, { "hint" => "Try setting a query parameter in the URL" }
-
   # body :: Env -> Hash -> IO String
   body = ->(env, state) {
     render["index.erb", binding]
@@ -30,7 +28,9 @@ module Application
   }
 
   # main :: Env -> State s (IO Response)
-  main = expose :main, ->(env) {
+  expose :main, ->(env) {
     updateState[env] >> gets[ response[env] ]
   }
+
+  expose :initialState, { "hint" => "Try setting a query parameter in the URL" }
 end

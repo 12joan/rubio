@@ -1,10 +1,10 @@
 require_relative "support"
 
-include Rubio::Expose
-
 module WhileM
+  extend Rubio::Expose
+
   # whileM :: IO Boolean -> IO ()
-  whileM = expose :whileM, ->(f) {
+  whileM = ->(f) {
     f >> ->(continue) {
       if continue
         whileM[f]
@@ -13,4 +13,6 @@ module WhileM
       end
     }
   }
+
+  expose :whileM, whileM
 end

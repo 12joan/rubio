@@ -4,47 +4,57 @@ module Rubio
       extend Expose
       extend Unit::Core
 
-      State = expose :State, ->(f) {
+      State = ->(f) {
         StateClass.new(f)
       }
 
-      pureState = expose :pureState, ->(x) {
+      pureState = ->(x) {
         State[ ->(s) {
           [x, s]
         }]
       }
 
-      get = expose :get, State[ ->(s) {
+      get = State[ ->(s) {
         [s, s]
       }]
 
-      put = expose :put, ->(x) {
+      put = ->(x) {
         State[ ->(s) {
           [unit, x]
         }]
       }
 
-      modify = expose :modify, ->(f) {
+      modify = ->(f) {
         get >> ->(x) {
           put[ f[x] ]
         }
       }
 
-      gets = expose :gets, ->(f) {
+      gets = ->(f) {
         get >> ->(x) {
           pureState[ f[x] ]
         }
       }
 
-      runState = expose :runState, proc(&:run)
+      runState = proc(&:run)
 
-      evalState = expose :evalState, ->(act) {
+      evalState = ->(act) {
         proc(&:first) << runState[act]
       }
 
-      execState = expose :execState, ->(act) {
+      execState = ->(act) {
         proc(&:last) << runState[act]
       }
+
+      expose :State, State
+      expose :pureState, pureState
+      expose :get, get
+      expose :put, put
+      expose :modify, modify
+      expose :gets, gets
+      expose :runState, runState
+      expose :evalState, evalState
+      expose :execState, execState
     end
   end
 end

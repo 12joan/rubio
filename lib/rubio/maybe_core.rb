@@ -3,13 +3,17 @@ module Rubio
     module Core
       extend Expose
 
-      Just = expose :Just, ->(x) {
+      Just = ->(x) {
         JustClass.new(x)
       }
 
-      Nothing = expose :Nothing, NothingClass.new
+      Nothing = NothingClass.new
 
-      pureMaybe = expose :pureMaybe, Just
+      pureMaybe = Just
+
+      expose :Just, Just
+      expose :Nothing, Nothing
+      expose :pureMaybe, pureMaybe
     end
   end
 end

@@ -3,9 +3,11 @@ module Rubio
     module Core
       extend Expose
 
-      fmap = expose :fmap, ->(f, x) {
+      fmap = ->(f, x) {
         x.fmap(f)
       }.curry
+
+      expose :fmap, fmap
     end
   end
 end

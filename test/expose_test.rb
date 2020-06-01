@@ -5,7 +5,9 @@ module DummyModule
 
   private_variable = 6
 
-  public_variable = expose :public_variable, private_variable * 7
+  public_variable = private_variable * 7
+  
+  expose :public_variable, public_variable
 end
 
 class ExposeTest < Minitest::Test

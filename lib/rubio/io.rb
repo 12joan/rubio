@@ -22,7 +22,7 @@ module Rubio
     end
 
     def fmap(f) 
-      self >> (IO.method(:pure) < f)
+      self >> (IO.method(:pure) << f)
     end
 
     def perform!

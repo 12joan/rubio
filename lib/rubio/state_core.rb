@@ -39,11 +39,11 @@ module Rubio
       runState = expose :runState, proc(&:run)
 
       evalState = expose :evalState, ->(act) {
-        proc(&:first) < runState[act]
+        proc(&:first) << runState[act]
       }
 
       execState = expose :execState, ->(act) {
-        proc(&:last) < runState[act]
+        proc(&:last) << runState[act]
       }
     end
   end

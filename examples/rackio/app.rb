@@ -19,7 +19,7 @@ module Application
   }
 
   # response :: Env -> Hash -> IO Response
-  response = (fmap[responseWithBody] < body).curry(2)
+  response = (fmap[responseWithBody] << body).curry(2)
 
   # Merge query parameters with the state hash
   updateState = ->(env) {

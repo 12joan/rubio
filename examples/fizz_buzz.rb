@@ -43,7 +43,7 @@ evaluate = ->(input) {
 
 # main :: IO ()
 main = whileM[
-  println["Enter a number..."] >> getln >> (pureIO < evaluate) >> println >> println["\n"] >> pureIO[true]
+  println["Enter a number..."] >> getln >> (pureIO << evaluate) >> println >> println["\n"] >> pureIO[true]
 ]
 
 main.perform!

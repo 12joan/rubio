@@ -20,6 +20,11 @@ module Rubio
       def inspect
         "Just #{@value.inspect}"
       end
+
+      # Provides support for Ruby 2.7 pattern matching
+      def deconstruct
+        [@value]
+      end
     end
 
     class NothingClass

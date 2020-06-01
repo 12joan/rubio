@@ -34,7 +34,11 @@ Write pure, functional code that encapsulates side effects using the IO monad (a
 
 ## 1. Installation
 
-To do
+Add the following line to your Gemfile.
+
+```ruby
+gem "rubio", github: "12joan/rubio"
+```
 
 ## 2. Usage and syntax
 

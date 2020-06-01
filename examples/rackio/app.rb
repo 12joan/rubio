@@ -8,17 +8,18 @@ module Application
 
   initialState = expose :initialState, { "hint" => "Try setting a query parameter in the URL" }
 
+  # body :: Env -> Hash -> IO String
   body = ->(env, state) {
     render["index.erb", binding]
   }.curry
 
+  # responseWithBody :: String -> Response
   responseWithBody = ->(body) {
     [200, {"Content-Type" => "text/html"}, [body]]
   }
 
-  response = ->(env, state) {
-    fmap[ responseWithBody ][ body[env, state] ]
-  }.curry
+  # response :: Env -> Hash -> IO Response
+  response = (fmap[responseWithBody] < body).curry(2)
 
   # Merge query parameters with the state hash
   updateState = ->(env) {
@@ -30,6 +31,6 @@ module Application
 
   # main :: Env -> State s (IO Response)
   main = expose :main, ->(env) {
-    updateState[env] >> get >> (pureState << response[env])
+    updateState[env] >> gets[ response[env] ]
   }
 end

@@ -64,15 +64,18 @@ class StateCoreTest < Minitest::Test
 
   def push
     ->(x) {
-      get >> ->(xs) {
-        put[ [x] + xs ]
-      }
+      modify[ ->(xs) {
+        [x] + xs
+      }]
     }
   end
 
   def pop
-    get >> ->(xs) {
-      put[ xs.drop(1) ] >> pureState[ xs.first ]
+    head = proc(&:first)
+    tail = ->(xs) { xs.drop(1) }
+
+    gets[head] >> ->(x) {
+      modify[tail] >> pureState[x]
     }
   end
 end

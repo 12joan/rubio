@@ -1,9 +1,7 @@
 require_relative "support"
-require_relative "whileM"
 
 include Rubio::IO::Core
 include Rubio::Maybe::Core
-include WhileM
 
 # divisible :: Integer -> Boolean
 divisible = ->(x, d) {
@@ -42,8 +40,6 @@ evaluate = ->(input) {
 }
 
 # main :: IO ()
-main = whileM[
-  println["Enter a number..."] >> getln >> (pureIO << evaluate) >> println >> println["\n"] >> pureIO[true]
-]
+main = println["Enter a number..."] >> (evaluate % getln) >> println
 
 main.perform!

@@ -1,34 +1,54 @@
 module Rubio
   module State
     class StateClass
-      def initialize(f)
-        @f = f
+      include Unit::Core
+
+      def initialize(f = nil, prior_state_functions: [])
+        subsequent_state_functions = if f.nil?
+          []
+        else
+          [ ->(_) { f } ]
+        end
+
+        @state_functions = prior_state_functions + subsequent_state_functions
       end
 
       def >>(other)
-        case
+        bind case
         when other.is_a?(StateClass)
-          bind ->(_) { other }
+          other.state_functions
         when other.respond_to?(:call)
-          bind(other)
+          [ ->(r) { other.call(r).run } ]
         else
           raise ArgumentError, "expected State or callable, got #{other.class}"
         end
       end
 
-      def bind(other)
-        StateClass.new( ->(s) {
-          a, new_s = self.run[s]
-          other[a].run[new_s]
-        })
-      end
-
       def run
-        @f
+        ->(s0) {
+          @state_functions.inject( [unit, s0] ) { |z, f|
+            r, s = z
+            f[r][s]
+          }
+        }
       end
 
       def inspect
         "State"
+      end
+
+      protected
+
+      def state_functions
+        @state_functions
+      end
+
+      private
+
+      def bind(subsequent_state_functions)
+        StateClass.new(
+          prior_state_functions: self.state_functions + subsequent_state_functions
+        )
       end
     end
   end

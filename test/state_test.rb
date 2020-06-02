@@ -8,7 +8,7 @@ class StateTest < Minitest::Test
 
     state = Rubio::State::StateClass.new(f)
 
-    assert_equal f, state.run
+    assert_equal ["Hello, world!", "world"], state.run["world"]
   end
 
   # Used below
@@ -39,6 +39,25 @@ class StateTest < Minitest::Test
     } >> push[4] >> pop
 
     assert_equal [4, [9, 2, 1, 10, 11]], state.run[ [10, 11] ]
+  end
+
+  test "extremely large numbers of States can be bound together" do
+    incrementState = Rubio::State::StateClass.new( ->(s) { [nil, s + 1] } )
+    increment      = ->(n) { n + 1 }
+
+    size = 20000
+
+    id = Rubio::State::StateClass.new( ->(s) { [nil, s] } )
+
+    longState = size.times.inject(id) { |z, _| 
+      z >> incrementState
+    }
+
+    control = size.times.inject(1) { |z, _|
+      increment[z]
+    }
+
+    assert_equal control, longState.run[1].last
   end
 
   test "inspecting State yields a meaningful value" do

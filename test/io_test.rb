@@ -38,6 +38,23 @@ class IOTest < Minitest::Test
     }
   end
 
+  test "extremely large numbers of IOs can be bound together" do
+    incrementIO = ->(n) { Rubio::IO.new { n + 1 } }
+    increment   = ->(n) { n + 1 }
+
+    size = 10000
+
+    longIO = size.times.inject( Rubio::IO.new { 1 } ) { |z, _| 
+      z >> incrementIO
+    }
+
+    control = size.times.inject(1) { |z, _|
+      increment[z]
+    }
+
+    assert_equal control, longIO.perform!
+  end
+
   test "fmap :: (a -> b) -> IO a -> IO b" do
     io1 = Rubio::IO.new { "Hello" }
     reverse = ->(x) { x.reverse }

@@ -185,8 +185,6 @@ runCommand = ->(cmd) {
 }
 ```
 
-Because of the way in which the `>>` operator is evaluated, extremely long chains of operations are likely to result in a `SystemStackError`. In practice, this tends to happen only when long or infinite loops are constructed. 
-
 #### 3.1.2 Built-in functions
 
 - `pureIO :: a -> IO a`

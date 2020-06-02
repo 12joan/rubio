@@ -1,24 +1,26 @@
 module Rubio
   class IO
-    def initialize(&action)
-      @action = action
+    include Unit::Core
+
+    def initialize(prior_actions = [], &action)
+      block_actions = if action.nil?
+        []
+      else
+        [ ->(_) { action.call } ]
+      end
+
+      @actions = prior_actions + block_actions
     end
 
     def >>(other)
-      case
+      bind case
       when other.is_a?(IO)
-        bind ->(_) { other }
+        other.actions
       when other.respond_to?(:call)
-        bind(other)
+        [ ->(x) { other.call(x).perform! } ]
       else
         raise ArgumentError, "expected IO or callable, got #{other.class}"
-      end
-    end
-
-    def bind(other)
-      IO.new {
-        other.call(perform!).perform!
-      }
+      end 
     end
 
     def fmap(f) 
@@ -26,7 +28,9 @@ module Rubio
     end
 
     def perform!
-      @action.call
+      @actions.inject( IO.pure(unit) ) { |z, action|
+        action[z]
+      }
     end
 
     def self.pure(x)
@@ -35,6 +39,18 @@ module Rubio
 
     def inspect
       "IO"
+    end
+
+    protected
+
+    def actions
+      @actions
+    end
+
+    private
+
+    def bind(subsequent_actions)
+      IO.new(self.actions + subsequent_actions)
     end
   end
 end

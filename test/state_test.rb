@@ -1,26 +1,17 @@
 require "test_helper"
 
 class StateTest < Minitest::Test
+  include Rubio::State::Core
+
   test "states can be run" do
     f = ->(x) {
       ["Hello, #{x}!", x]
     }
 
-    state = Rubio::State::StateClass.new(f)
+    state = State[f]
 
     assert_equal ["Hello, world!", "world"], state.run["world"]
   end
-
-  # Used below
-  push = ->(x) {
-    Rubio::State::StateClass.new(
-      ->(xs) { [nil, [x] + xs] }
-    )
-  }
-
-  pop = Rubio::State::StateClass.new(
-    ->(xs) { [ xs.first, xs.drop(1) ] }
-  )
 
   test "states can be bound together" do
     push1 = push[1]
@@ -42,12 +33,12 @@ class StateTest < Minitest::Test
   end
 
   test "extremely large numbers of States can be bound together" do
-    incrementState = Rubio::State::StateClass.new( ->(s) { [nil, s + 1] } )
+    incrementState = State[ ->(s) { [nil, s + 1] } ]
     increment      = ->(n) { n + 1 }
 
     size = 20000
 
-    id = Rubio::State::StateClass.new( ->(s) { [nil, s] } )
+    id = State[ ->(s) { [nil, s] } ]
 
     longState = size.times.inject(id) { |z, _| 
       z >> incrementState
@@ -62,5 +53,21 @@ class StateTest < Minitest::Test
 
   test "inspecting State yields a meaningful value" do
     assert_equal "State", pop.inspect
+  end
+
+  private
+
+  def push
+    ->(x) {
+      State[
+        ->(xs) { [nil, [x] + xs] }
+      ]
+    }
+  end
+
+  def pop
+    State[
+      ->(xs) { [ xs.first, xs.drop(1) ] }
+    ]
   end
 end

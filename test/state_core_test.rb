@@ -61,7 +61,7 @@ class StateCoreTest < Minitest::Test
     assert_equal [unit, 42], runState[state][21]
   end
 
-  test "modifyIO :: (s -> s) -> State s IO ()" do
+  test "modifyIO :: (s -> s) -> StateIO s IO ()" do
     double = ->(x) { x * 2 }
 
     state = modifyIO[double]
@@ -77,7 +77,7 @@ class StateCoreTest < Minitest::Test
     assert_equal [10, 5], runState[state][7]
   end
 
-  test "getsIO :: (s -> a) -> State s a" do
+  test "getsIO :: (s -> a) -> StateT s IO a" do
     double = ->(x) { x * 2 }
 
     state = putIO[5] >> getsIO[double]
@@ -91,7 +91,7 @@ class StateCoreTest < Minitest::Test
     assert_equal [3, [2, 1, 10, 11]], runState[state][ [10, 11] ]
   end
 
-  test "runStateIO -> State s IO a -> s -> IO (a, s)" do
+  test "runStateT -> State s IO a -> s -> IO (a, s)" do
     state = pushIO[1] >> pushIO[2] >> pushIO[3] >> popIO
 
     assert_equal [3, [2, 1, 10, 11]], runStateT[state][ [10, 11] ].perform!
@@ -103,7 +103,7 @@ class StateCoreTest < Minitest::Test
     assert_equal 3, evalState[state][ [10, 11] ]
   end
 
-  test "evalStateIO :: State s IO a -> s -> IO a" do
+  test "evalStateT :: State s IO a -> s -> IO a" do
     state = pushIO[1] >> pushIO[2] >> pushIO[3] >> popIO
 
     assert_equal 3, evalStateT[state][ [10, 11] ].perform!

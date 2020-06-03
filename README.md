@@ -445,6 +445,8 @@ doSomethingWithMaybe[ Nothing ] #=> "You got nothing."
 
 #### 3.3.1 Built-in functions
 
+##### 3.3.1.1 `State`
+
 - `State :: (s -> (a, s)) -> State s a`
 
   Constructs a `State` object with the given function. Note that since Ruby does not support tuples, you are expected to use an `Array` as the return value of the function. 
@@ -470,7 +472,7 @@ doSomethingWithMaybe[ Nothing ] #=> "You got nothing."
   ```
 
   Often, composing `State` objects using the functions listed below is preferable to calling the `State` constructor directly.
-
+  
 - `pureState :: a -> State s a`
 
   Constructs a `State` object which sets the result and leaves the state unchanged.
@@ -610,6 +612,105 @@ doSomethingWithMaybe[ Nothing ] #=> "You got nothing."
   execState[ operation ][ "initial state" ] #=> "final state"
   ```
   
+##### 3.3.1.2 `StateIO`
+
+- `StateIO :: (s -> IO (a, s)) -> StateIO s IO a`
+
+  `IO` variety of `State`.
+
+  ```ruby
+  include Rubio::State::Core
+  include Rubio::IO::Core
+  
+  operation = StateIO[
+    ->(s) {
+      println["The current state is #{s.inspect}"] >> pureIO[ ["result", s.reverse] ]
+    }
+  ]
+  
+  io = runStateT[operation][ [1, 2, 3] ] #=> IO
+  io.perform!
+  # The current state is [1, 2, 3]
+  #=> ["result", [3, 2, 1]] 
+  ```
+  
+- `liftIO :: IO a -> StateIO s IO a`
+
+  Lift an `IO` into the `StateIO` monad. Useful for performing `IO` operations during a computation.
+
+  ```ruby
+  include Rubio::State::Core
+  include Rubio::IO::Core
+  
+  operation = (liftIO << println)["Hello world!"]
+  
+  io = execStateT[operation][ [1, 2, 3] ] #=> IO
+  io.perform!
+  # Hello world!
+  #=> [3, 2, 1]
+  ```
+
+- `pureStateIO :: a -> StateIO s IO a`
+
+  `IO` variety of `pureState`.
+
+- `getIO :: StateIO s IO s`
+
+  `IO` variety of `get`.
+
+- `putIO :: s -> StateIO s IO ()`
+
+  `IO` variety of `put`.
+
+- `modifyIO :: (s -> s) -> StateIO s IO ()`
+
+  `IO` variety of `modify.`
+  
+- `getsIO :: (s -> a) -> StateIO s a`
+
+  `IO` variety of `gets`.
+  
+- `runStateT -> StateIO s IO a -> s -> IO (a, s)`
+
+  `IO` variety of `runState`.
+
+  ```ruby
+  include Rubio::State::Core
+  include Rubio::IO::Core
+  
+  operation = putIO["final state"] >> pureStateIO["final result"]
+  
+  io = runStateT[ operation ][ "initial state" ] #=> IO
+  io.perform! #=> ["final result", "final state"]
+  ```
+
+- `evalStateT :: StateIO s IO a -> s -> IO a`
+
+  `IO` variety of `evalState`.
+  
+  ```ruby
+  include Rubio::State::Core
+  include Rubio::IO::Core
+  
+  operation = putIO["final state"] >> pureStateIO["final result"]
+  
+  io = evalStateT[ operation ][ "initial state" ] #=> IO
+  io.perform! #=> "final result"
+  ```
+
+- `execStateT :: StateIO s IO a -> s -> IO s`
+
+  `IO` variety of `execState`.
+
+  ```ruby
+  include Rubio::State::Core
+  include Rubio::IO::Core
+  
+  operation = putIO["final state"] >> pureStateIO["final result"]
+  
+  io = execStateT[ operation ][ "initial state" ] #=> IO
+  io.perform! #=> "final state"
+  ```
 
 ### 3.4 `Rubio::Unit::Core`
 

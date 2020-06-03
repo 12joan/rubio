@@ -25,6 +25,8 @@ Write pure, functional code that encapsulates side effects using the IO monad (a
     - [3.2.2 Built-in functions](#322-built-in-functions)
   - [3.3 `Rubio::State::Core`](#33-rubiostatecore)
     - [3.3.1 Built-in functions](#331-built-in-functions)
+      - [3.1.1.1 `State`](#3311-state)
+      - [3.1.1.2 `StateIO`](#3312-stateio)
   - [3.4 `Rubio::Unit::Core`](#34-rubiounitcore)
     - [3.4.1 Built-in functions](#341-built-in-functions)
   - [3.5 `Rubio::Functor::Core`](#35-rubiofunctorcore)

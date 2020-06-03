@@ -12,17 +12,17 @@ class StateCoreTest < Minitest::Test
   test "pure :: a -> State s a" do
     state = pureState[5]
 
-    assert_equal [5, "Hello"], state.run["Hello"]
+    assert_equal [5, "Hello"], runState[state]["Hello"]
   end 
 
   test "get :: State s s" do
-    assert_equal [5, 5], get.run[5]
+    assert_equal [5, 5], runState[get][5]
   end
 
   test "put :: s -> State s ()" do
     state = put["5"]
     
-    assert_equal [unit, "5"], state.run["anything"]
+    assert_equal [unit, "5"], runState[state]["anything"]
   end
 
   test "modify :: (s -> s) -> State s ()" do
@@ -30,7 +30,7 @@ class StateCoreTest < Minitest::Test
 
     state = modify[double]
 
-    assert_equal [unit, 42], state.run[21]
+    assert_equal [unit, 42], runState[state][21]
   end
 
   test "gets :: (s -> a) -> State s a" do
@@ -38,7 +38,7 @@ class StateCoreTest < Minitest::Test
 
     state = put[5] >> gets[double]
 
-    assert_equal [10, 5], state.run[7]
+    assert_equal [10, 5], runState[state][7]
   end
 
 
@@ -50,7 +50,6 @@ class StateCoreTest < Minitest::Test
 
   test "evalState :: State s a -> s -> a" do
     state = push[1] >> push[2] >> push[3] >> pop
-
     assert_equal 3, evalState[state][ [10, 11] ]
   end
 

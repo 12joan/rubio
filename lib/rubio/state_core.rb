@@ -5,7 +5,8 @@ module Rubio
       extend Unit::Core
 
       State = ->(f) {
-        StateClass.new(f)
+        pureIdentity = ->(x) { Monad::Identity::IdentityClass.pure(x) }
+        StateClass.new(pureIdentity << f)
       }
 
       pureState = ->(x) {
@@ -36,7 +37,9 @@ module Rubio
         }
       }
 
-      runState = proc(&:run)
+      runState = ->(state, initial_state) {
+        state.run[initial_state].value
+      }.curry
 
       evalState = ->(act) {
         proc(&:first) << runState[act]

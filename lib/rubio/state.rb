@@ -3,7 +3,7 @@ module Rubio
     class StateClass
       include Unit::Core
 
-      def initialize(f = nil, prior_state_functions: [])
+      def initialize(f = nil, prior_state_functions: [], monad_state_klass: Monad::Identity::IdentityClass)
         subsequent_state_functions = if f.nil?
           []
         else
@@ -11,6 +11,7 @@ module Rubio
         end
 
         @state_functions = prior_state_functions + subsequent_state_functions
+        @monad_state_klass = monad_state_klass
       end
 
       def >>(other)
@@ -26,9 +27,10 @@ module Rubio
 
       def run
         ->(s0) {
-          @state_functions.inject( [unit, s0] ) { |z, f|
-            r, s = z
-            f[r][s]
+          @state_functions.inject( @monad_state_klass.pure [unit, s0] ) { |z, f|
+            z >> proc { |r, s|
+              f[r][s]
+            }
           }
         }
       end
@@ -47,7 +49,8 @@ module Rubio
 
       def bind(subsequent_state_functions)
         StateClass.new(
-          prior_state_functions: self.state_functions + subsequent_state_functions
+          prior_state_functions: self.state_functions + subsequent_state_functions,
+          monad_state_klass: @monad_state_klass
         )
       end
     end

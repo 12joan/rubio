@@ -10,7 +10,7 @@ class StateTest < Minitest::Test
 
     state = State[f]
 
-    assert_equal ["Hello, world!", "world"], state.run["world"]
+    assert_equal ["Hello, world!", "world"], runState[state]["world"]
   end
 
   test "states can be bound together" do
@@ -20,7 +20,7 @@ class StateTest < Minitest::Test
 
     state = push1 >> push2 >> push3 >> pop
 
-    assert_equal [3, [2, 1, 10, 11]], state.run[ [10, 11] ]
+    assert_equal [3, [2, 1, 10, 11]], runState[state][ [10, 11] ]
   end
 
   test "states can be bound to callables" do
@@ -29,7 +29,7 @@ class StateTest < Minitest::Test
       push[x * x]
     } >> push[4] >> pop
 
-    assert_equal [4, [9, 2, 1, 10, 11]], state.run[ [10, 11] ]
+    assert_equal [4, [9, 2, 1, 10, 11]], runState[state][ [10, 11] ]
   end
 
   test "extremely large numbers of States can be bound together" do
@@ -48,7 +48,7 @@ class StateTest < Minitest::Test
       increment[z]
     }
 
-    assert_equal control, longState.run[1].last
+    assert_equal control, runState[longState][1].last
   end
 
   test "inspecting State yields a meaningful value" do

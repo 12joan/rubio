@@ -812,4 +812,4 @@ doSomethingWithMaybe[ Nothing ] #=> "You got nothing."
 - [examples/fizz_buzz.rb](examples/fizz_buzz.rb) - Examples of basic functional programming, basic IO, Maybe, fmap
 - [examples/repl.rb](examples/repl.rb) and [examples/whileM.rb](examples/whileM.rb) - Custom includable modules, looping, more nuanced use of IO
 - [examples/ruby_2.7_pattern_matching.rb](examples/ruby_2.7_pattern_matching.rb) - Using Maybe with the experimental pattern matching syntax in Ruby 2.7
-- [examples/rackio/](examples/rackio/) - A small Rack application built using Rubio; uses the State monad to store data in memory that persists between requests
+- [examples/rackio/](examples/rackio/) - A small Rack application built using Rubio; uses the StateIO monad to store data in memory that persists between requests

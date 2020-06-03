@@ -23,8 +23,8 @@ module Rackio
     end
 
     def call(env)
-      io_response, @state = runState[ @main[env] ][ @state ]
-      io_response.perform!
+      response, @state = runStateT[ @main[env] ][ @state ].perform!
+      response
     end
   end
 end

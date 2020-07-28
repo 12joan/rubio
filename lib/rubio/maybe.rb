@@ -54,3 +54,15 @@ module Rubio
     end
   end
 end
+
+class Object
+  def to_maybe
+    Rubio::Maybe::JustClass.new(self)
+  end
+end
+
+class NilClass
+  def to_maybe
+    Rubio::Maybe::NothingClass.new
+  end
+end

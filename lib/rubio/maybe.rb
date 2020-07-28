@@ -29,6 +29,10 @@ module Rubio
       def deconstruct
         [@value]
       end
+
+      def ==(other)
+        other.is_a?(JustClass) && @value == other.get!
+      end
     end
 
     class NothingClass
@@ -50,6 +54,10 @@ module Rubio
 
       def inspect
         "Nothing"
+      end
+
+      def ==(other)
+        other.is_a?(NothingClass)
       end
     end
   end

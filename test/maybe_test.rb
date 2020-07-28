@@ -62,4 +62,12 @@ class MaybeTest < Minitest::Test
     maybe = Rubio::Maybe::NothingClass.new
     assert_equal "Nothing", maybe.inspect
   end
+
+  test "x.to_maybe = Just x" do
+    assert_equal 5, 5.to_maybe.get!
+  end
+
+  test "nil.to_maybe = Nothing" do
+    assert_instance_of Rubio::Maybe::NothingClass, nil.to_maybe
+  end
 end

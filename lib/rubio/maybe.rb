@@ -17,6 +17,10 @@ module Rubio
         @value
       end
 
+      def get_or_else(_)
+        get!
+      end
+
       def inspect
         "Just #{@value.inspect}"
       end
@@ -38,6 +42,10 @@ module Rubio
 
       def get!
         nil
+      end
+
+      def get_or_else(x)
+        x
       end
 
       def inspect

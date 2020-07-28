@@ -11,6 +11,16 @@ class MaybeTest < Minitest::Test
     assert_nil maybe.get!
   end
 
+  test "get_or_else (Just x) _ = x" do
+    maybe = Rubio::Maybe::JustClass.new(42)
+    assert_equal 42, maybe.get_or_else(6)
+  end
+
+  test "get_or_else Nothing x = x" do
+    maybe = Rubio::Maybe::NothingClass.new
+    assert_equal 6, maybe.get_or_else(6)
+  end
+
   test "(Just x) >> f = f x" do
     maybe1 = Rubio::Maybe::JustClass.new(42)
     f = ->(x) { Rubio::Maybe::JustClass.new(x / 6) }

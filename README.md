@@ -23,6 +23,7 @@ Write pure, functional code that encapsulates side effects using the IO monad (a
       - [3.2.1.1 Ruby < 2.7](#3211-ruby--27)
       - [3.2.1.2 Ruby >= 2.7](#3212-ruby--27)
     - [3.2.2 Built-in functions](#322-built-in-functions)
+    - [3.2.3 Converting nillable results to `Maybe`](#323-converting-nillable-results-to-maybe) 
   - [3.3 `Rubio::State::Core`](#33-rubiostatecore)
     - [3.3.1 Built-in functions](#331-built-in-functions)
       - [3.3.1.1 `State`](#3311-state)

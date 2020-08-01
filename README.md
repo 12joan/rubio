@@ -23,6 +23,7 @@ Write pure, functional code that encapsulates side effects using the IO monad (a
       - [3.2.1.1 Ruby < 2.7](#3211-ruby--27)
       - [3.2.1.2 Ruby >= 2.7](#3212-ruby--27)
     - [3.2.2 Built-in functions](#322-built-in-functions)
+    - [3.2.3 Converting nillable results to `Maybe`](#323-converting-nillable-results-to-maybe) 
   - [3.3 `Rubio::State::Core`](#33-rubiostatecore)
     - [3.3.1 Built-in functions](#331-built-in-functions)
       - [3.3.1.1 `State`](#3311-state)
@@ -343,17 +344,6 @@ doSomethingWithMaybe[ Just["pattern matching"] ] #=> "You got pattern matching!"
 doSomethingWithMaybe[ Nothing ] #=> "You got nothing."
 ```
 
-```ruby
-include Rubio::Maybe::Core
-
-orEmptyString = ->(maybe) {
-  maybe.get! || ""
-}
-
-orEmptyString[ Just["hello"] ] #=> "hello"
-orEmptyString[ Nothing ] #=> ""
-```
-
 Note that if `x` is a "falsey" value, such as `false` or `nil`, you must explicitly check for `Rubio::Maybe::JustClass` or `Rubio::Maybe::NothingClass`. 
 
 ```ruby
@@ -370,6 +360,19 @@ doSomethingWithMaybe = ->(maybe) {
 
 doSomethingWithMaybe[ Just[false] ] #=> "You got false!"
 doSomethingWithMaybe[ Nothing ] #=> "You got nothing."
+```
+
+Alternatively, `Maybe#get_or_else(y)` will return `x` in the case of `Just[x]`, or `y` in the case of `Nothing`.
+
+```ruby
+include Rubio::Maybe::Core
+
+orEmptyString = ->(maybe) {
+  maybe.get_or_else("")
+}
+
+orEmptyString[ Just["hello"] ] #=> "hello"
+orEmptyString[ Nothing ] #=> ""
 ```
 
 ##### 3.2.1.2 Ruby >= 2.7
@@ -442,6 +445,20 @@ doSomethingWithMaybe[ Nothing ] #=> "You got nothing."
   maybe2 = pureMaybe[5]
   maybe2.inspect #=> "Just 5"
   ```
+
+#### 3.2.3 Converting nillable results to `Maybe`
+
+Rubio defines `to_maybe` on `Object` and `NilClass`. 
+
+```ruby
+hash = { a: 1, b: 2, c: 3 }
+
+maybe1 = hash[:a].to_maybe
+maybe1.inspect #=> "Just 1"
+
+maybe2 = hash[:e].to_maybe
+maybe2.inspect #=> "Nothing"
+```
 
 ### 3.3 `Rubio::State::Core`
 

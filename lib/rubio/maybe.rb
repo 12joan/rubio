@@ -17,6 +17,10 @@ module Rubio
         @value
       end
 
+      def get_or_else(_)
+        get!
+      end
+
       def inspect
         "Just #{@value.inspect}"
       end
@@ -24,6 +28,10 @@ module Rubio
       # Provides support for Ruby 2.7 pattern matching
       def deconstruct
         [@value]
+      end
+
+      def ==(other)
+        other.is_a?(JustClass) && @value == other.get!
       end
     end
 
@@ -40,9 +48,29 @@ module Rubio
         nil
       end
 
+      def get_or_else(x)
+        x
+      end
+
       def inspect
         "Nothing"
       end
+
+      def ==(other)
+        other.is_a?(NothingClass)
+      end
     end
+  end
+end
+
+class Object
+  def to_maybe
+    Rubio::Maybe::JustClass.new(self)
+  end
+end
+
+class NilClass
+  def to_maybe
+    Rubio::Maybe::NothingClass.new
   end
 end

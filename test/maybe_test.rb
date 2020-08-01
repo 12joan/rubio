@@ -11,6 +11,16 @@ class MaybeTest < Minitest::Test
     assert_nil maybe.get!
   end
 
+  test "get_or_else (Just x) _ = x" do
+    maybe = Rubio::Maybe::JustClass.new(42)
+    assert_equal 42, maybe.get_or_else(6)
+  end
+
+  test "get_or_else Nothing x = x" do
+    maybe = Rubio::Maybe::NothingClass.new
+    assert_equal 6, maybe.get_or_else(6)
+  end
+
   test "(Just x) >> f = f x" do
     maybe1 = Rubio::Maybe::JustClass.new(42)
     f = ->(x) { Rubio::Maybe::JustClass.new(x / 6) }
@@ -51,5 +61,36 @@ class MaybeTest < Minitest::Test
   test "inspecting Nothing yields a meaningful value" do
     maybe = Rubio::Maybe::NothingClass.new
     assert_equal "Nothing", maybe.inspect
+  end
+
+  test "x.to_maybe = Just x" do
+    assert_equal 5, 5.to_maybe.get!
+  end
+
+  test "nil.to_maybe = Nothing" do
+    assert_instance_of Rubio::Maybe::NothingClass, nil.to_maybe
+  end
+
+  test "(Just x) = (Just y) <==> x = y" do
+    CustomEquality = Struct.new(:x) do
+      def ==(other)
+        (self.x % 2) == (other.x % 2)
+      end
+    end
+
+    justCustomEquality = ->(x) {
+      Rubio::Maybe::JustClass.new(CustomEquality.new(x)) 
+    }
+
+    assert_equal justCustomEquality[4], justCustomEquality[6]
+    refute_equal justCustomEquality[4], justCustomEquality[7]
+  end
+
+  test "(Just x) != Nothing" do
+    refute_equal Rubio::Maybe::JustClass.new(4), Rubio::Maybe::NothingClass
+  end
+
+  test "Nothing = Nothing" do
+    assert_equal Rubio::Maybe::NothingClass.new, Rubio::Maybe::NothingClass.new
   end
 end

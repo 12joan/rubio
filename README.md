@@ -161,7 +161,7 @@ To make the syntax for this nicer, Rubio provides the `Rubio::Expose` module.
 module SomeStandardFunctions
   extend Rubio::Expose
   
-	expose :add,      ->(x, y) { x + y }
+  expose :add,      ->(x, y) { x + y }
   expose :multiply, ->(x, y) { x * y }
 end
 

@@ -18,4 +18,32 @@ class MaybeCoreTest < Minitest::Test
   test "Nothing = Nothing" do
     assert_instance_of Rubio::Maybe::NothingClass, Nothing
   end
+
+  test "pattern matching on Just" do
+    maybe = Just[42]
+
+    result =
+      case maybe
+      in Just[x]
+        "It is #{x}"
+      in Nothing
+        "There is nothing"
+      end
+
+    assert_equal "It is 42", result
+  end
+
+  test "pattern matching on Nothing" do
+    maybe = Nothing
+
+    result =
+      case maybe
+      in Just[x]
+        "It is #{x}"
+      in Nothing
+        "There is nothing"
+      end
+
+    assert_equal "There is nothing", result
+  end
 end

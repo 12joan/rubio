@@ -28,11 +28,6 @@ module Rubio
       def inspect
         "Right #{@value.inspect}"
       end
-
-      # Provides support for Ruby 2.7 pattern matching
-      def deconstruct
-        [@value]
-      end
     end
 
     class LeftClass < Either
@@ -50,11 +45,6 @@ module Rubio
 
       def inspect
         "Left #{@value.inspect}"
-      end
-
-      # Provides support for Ruby 2.7 pattern matching
-      def deconstruct
-        [@value]
       end
     end
   end

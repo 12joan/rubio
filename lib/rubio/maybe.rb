@@ -6,6 +6,10 @@ module Rubio
       def inspect
         "Just #{@value.inspect}"
       end
+
+      def deconstruct
+        [@value]
+      end
     end
 
     class NothingClass < Either::LeftClass
@@ -15,6 +19,10 @@ module Rubio
 
       def inspect
         "Nothing"
+      end
+
+      def deconstruct
+        []
       end
     end
   end
